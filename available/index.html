@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Randomize</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <style>
+  .taken {
+    background-color: orange;
+    padding: 5px;
+  }
+
+  </style>
+
+</head>
+<body>
+
+<h1> Pattern unlock possibilities</h1>
+
+<div id="tabs">
+  <ul>
+    <li id="tab2"><a href="#fragment-2">2 chars</a></li>
+    <li id="tab3"><a href="#fragment-3">3 chars</a></li>
+    <li id="tab4"><a href="#fragment-4">4 chars</a></li>
+    <li id="tab5"><a href="#fragment-5">5 chars</a></li>
+    <li id="tab6"><a href="#fragment-6">6 chars</a></li>
+    <li id="tab7"><a href="#fragment-7">7 chars</a></li>
+    <li id="tab8"><a href="#fragment-8">8 chars</a></li>
+    <li id="tab9"><a href="#fragment-9">9 chars</a></li>
+  </ul>
+  <div id="fragment-2">
+    <ul id="possibilities-2"></ul>
+  </div>
+  <div id="fragment-3">
+    <ul id="possibilities-3"></ul>
+  </div>
+  <div id="fragment-4">
+    <ul id="possibilities-4"></ul>
+  </div>
+  <div id="fragment-5">
+    <ul id="possibilities-5"></ul>
+  </div>
+  <div id="fragment-6">
+    <ul id="possibilities-6"></ul>
+  </div>
+  <div id="fragment-7">
+    <ul id="possibilities-7"></ul>
+  </div>
+  <div id="fragment-8">
+    <ul id="possibilities-8"></ul>
+  </div>
+  <div id="fragment-9">
+    <ul id="possibilities-9"></ul>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+var existingPatterns = [];
+var existingPatterns2 = [];
+var possibilitiesPerCategories = [];
+var allTextLines;
+
+$(document).ready(function() {
+
+  $( "#tabs" ).tabs();
+
+  $.ajax({
+      type: "GET",
+      url: "/available/result.txt",
+      dataType: "text",
+      success: function(data) {
+
+        possibilitiesPerCategories[2] = [];
+        possibilitiesPerCategories[3] = [];
+        possibilitiesPerCategories[4] = [];
+        possibilitiesPerCategories[5] = [];
+        possibilitiesPerCategories[6] = [];
+        possibilitiesPerCategories[7] = [];
+        possibilitiesPerCategories[8] = [];
+        possibilitiesPerCategories[9] = [];
+
+
+        allTextLines = data.split(",");
+
+        allTextLines.forEach(function(element) {
+          var elementlength = element.length;
+          possibilitiesPerCategories[elementlength].push(element);
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/available/patterns-data.json",
+            dataType: "text",
+            async: false,
+            success: function(data) {
+
+                var obj = JSON.parse(data);
+                obj.forEach(function(element) {
+
+                  var pattern = element.pattern;;
+
+                  if(element.language.fr != undefined) {
+                    var contentTitle = element.language.fr.title ;
+                    var contentURL = element.language.fr.url ;
+                  }else if(element.language.en != undefined){
+                    var contentTitle = element.language.en.title ;
+                    var contentURL = element.language.en.url ;
+                  }
+
+                  existingPatterns[pattern] = [];
+                  existingPatterns[pattern]["pattern"] = pattern ;
+                  existingPatterns[pattern]["title"] = contentTitle ;
+                  existingPatterns[pattern]["URL"] = contentURL;
+
+                });
+
+                existingPatterns2 = Object.keys(existingPatterns);
+
+            }
+         });
+
+
+        for (var i = 2 ; i < possibilitiesPerCategories.length ; i++){
+            for (var j = 0 ; j < possibilitiesPerCategories[i].length ; j++){
+
+                if(existingPatterns2.includes(possibilitiesPerCategories[i][j])) {
+                    $("#possibilities-"+i).append('<li class="taken"><a href="'+existingPatterns[possibilitiesPerCategories[i][j]]["URL"]+'">'+possibilitiesPerCategories[i][j]+' -> '+existingPatterns[possibilitiesPerCategories[i][j]]["title"]+'</a></li>');
+                }
+
+                //check en reverse
+                if(existingPatterns2.includes(reverseString(possibilitiesPerCategories[i][j]))) {
+                    var reversePattern = reverseString(possibilitiesPerCategories[i][j]);
+                    $("#possibilities-"+i).append('<li class="taken"><a href="'+existingPatterns[reversePattern]["URL"]+'">'+reversePattern+' -> '+existingPatterns[reversePattern]["title"]+'</a></li>');
+                }
+            }
+        }
+
+        for (var i = 2 ; i < possibilitiesPerCategories.length ; i++){
+            for (var j = 0 ; j < possibilitiesPerCategories[i].length ; j++){
+                if(!existingPatterns2.includes(possibilitiesPerCategories[i][j]) && !existingPatterns2.includes(reverseString(possibilitiesPerCategories[i][j]))) {
+                  $("#possibilities-"+i).append("<li>"+possibilitiesPerCategories[i][j]+"</li>");
+                }
+            }
+        }
+
+       for (var i = 2; i <10 ; i++){
+         $("#tabs #tab"+i+" a").html(i + "chars <br /> <small>("+$("#tabs #fragment-"+i+" li:not(.taken)").length + " available)</small>")
+       }
+
+      }
+   });
+
+ });
+
+
+
+   function reverseString(str) {
+     return str.split("").reverse().join("");
+   }
+
+</script>
+
+</body>
+</html>

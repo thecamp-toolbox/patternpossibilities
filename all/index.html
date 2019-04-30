@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Randomize</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $.ajax({
+          type: "GET",
+          url: "all/possibilities.csv",
+          dataType: "text",
+          success: function(data) {processData(data);}
+       });
+  });
+
+  function processData(allText) {
+
+      var allTextLines = allText.split(/\r\n|\n/);
+      var headers = allTextLines[0].split(',');
+
+      var unwantedPossibilities = ["13", "31", "46", "64", "79", "97", "17", "71", "39", "93", "28", "82", "19", "91", "37", "73", "18", "81", "83", "38", "16", "61", "49", "94", "43", "34", "76", "67", "72", "27", "29", "92" ];
+
+      var lines = [];
+      var linesClean = [];
+
+      for (var i=1; i<allTextLines.length; i++) {
+          var data = allTextLines[i].split(',');
+          if (data.length == headers.length) {
+              var tarr = [];
+              for (var j=0; j<headers.length; j++) {
+                  tarr.push(data[j]);
+              }
+              lines.push(tarr);
+          }
+      }
+
+
+     for (var i=0; i<lines.length; i++) {
+
+          if(linesClean.indexOf(lines[i][0]) == -1 && linesClean.indexOf(reverseString(lines[i][0])) == -1){
+
+            var found = false;
+
+            for(var j=0; j<unwantedPossibilities.length; j++) {
+
+              if(lines[i][0].includes(unwantedPossibilities[j])) {
+                found = true;
+              }
+
+            }
+
+            if(!found){
+                linesClean.push(lines[i][0]);
+            }
+          }
+      }
+
+      console.log(linesClean.toString());
+
+  }
+
+  function reverseString(str) {
+    return str.split("").reverse().join("");
+  }
+
+
+
+</script>
+
+</body>
+</html>
