@@ -70,7 +70,7 @@ $(document).ready(function() {
 
   $.ajax({
       type: "GET",
-      url: "/available/result.txt",
+      url: "/result.txt",
       dataType: "text",
       success: function(data) {
 
@@ -93,7 +93,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "GET",
-            url: "/available/patterns-data.json",
+            url: "/patterns-data.json",
             dataType: "text",
             async: false,
             success: function(data) {
