@@ -14,7 +14,7 @@
 $(document).ready(function() {
     $.ajax({
           type: "GET",
-          url: "all/possibilities.csv",
+          url: "/patternpossibilities/all/possibilities.csv",
           dataType: "text",
           success: function(data) {processData(data);}
        });
