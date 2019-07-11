@@ -19,6 +19,10 @@
 
 <h1> Pattern unlock possibilities</h1>
 
+<h3><a href="/patternpossibilities?filter=1">Possibilities #1</a></h3>
+<h3><a href="/patternpossibilities?filter=2">Possibilities #2</a></h3>
+<h3><a href="/patternpossibilities?filter=3">Possibilities #3</a></h3>
+
 <div id="tabs">
   <ul>
     <li id="tab2"><a href="#fragment-2">2 chars</a></li>
@@ -68,9 +72,13 @@ $(document).ready(function() {
 
   $( "#tabs" ).tabs();
 
+  var filter = getUrlParameter("filter");
+  if (filter == undefined) filter = 1;
+
+
   $.ajax({
       type: "GET",
-      url: window.location.pathname+"result.txt",
+      url: window.location.pathname+"result"+filter+".txt",
       dataType: "text",
       success: function(data) {
 
@@ -161,6 +169,21 @@ $(document).ready(function() {
    function reverseString(str) {
      return str.split("").reverse().join("");
    }
+
+   function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
 
 </script>
 
