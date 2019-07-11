@@ -156,7 +156,7 @@ $(document).ready(function() {
         }
 
        for (var i = 2; i <10 ; i++){
-         $("#tabs #tab"+i+" a").html(i + "chars <br /> <small>("+$("#tabs #fragment-"+i+" li:not(.taken)").length + " available)</small>")
+         $("#tabs #tab"+i+" a").html(i + "chars <br /> <small>("+$("#tabs #fragment-"+i+" li:not(.taken)").length + " available <br /> "+$("#tabs #fragment-"+i+" li.taken+").length +" taken)</small>")
        }
 
       }
