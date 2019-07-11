@@ -10,22 +10,25 @@
 
 
 <script type="text/javascript">
-
+console.log("lol");
 $(document).ready(function() {
+
     $.ajax({
           type: "GET",
-          url: "possibilities.csv",
+          url: "/patternpossibilities/all/possibilities.csv",
           dataType: "text",
-          success: function(data) {processData(data);}
+          success: function(data) { processData(data);}
        });
   });
 
   function processData(allText) {
 
+
+
       var allTextLines = allText.split(/\r\n|\n/);
       var headers = allTextLines[0].split(',');
 
-      var unwantedPossibilities = ["13", "31", "46", "64", "79", "97", "17", "71", "39", "93", "28", "82", "19", "91", "37", "73", "18", "81", "83", "38", "16", "61", "49", "94", "43", "34", "76", "67", "72", "27", "29", "92" ];
+      var unwantedPossibilities = ["13", "31", "46", "64", "79", "97", "17", "71", "39", "93", "28", "82", "19", "91", "37", "73"];
 
       var lines = [];
       var linesClean = [];
@@ -61,8 +64,6 @@ $(document).ready(function() {
             }
           }
       }
-
-      console.log(linesClean.toString());
 
   }
 
